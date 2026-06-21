@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,7 +6,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bounty Board</title>
 
+<!-- Markdown Renderer -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
 <style>
+
 * {
     box-sizing: border-box;
 }
@@ -51,10 +56,22 @@ button:hover {
     opacity: 0.9;
 }
 
-<div id="set-description" class="set-description"></div>
+.set-description {
+    max-width: 1100px;
+    margin: 0 auto 25px auto;
+    padding: 20px;
+    background: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 12px;
+    line-height: 1.6;
+}
 
-<div id="gallery" class="gallery"></div>
-    
+.set-description h1,
+.set-description h2,
+.set-description h3 {
+    margin-top: 0;
+}
+
 .gallery {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -80,18 +97,27 @@ button:hover {
     font-size: 1.2rem;
     font-weight: bold;
 }
+
 </style>
 </head>
 <body>
 
 <header>
-    <!-- CHANGE THIS IF YOUR LOGO HAS A DIFFERENT NAME -->
     <img src="Logo/Logo.jpg" alt="Logo" class="logo">
 </header>
 
 <div class="controls">
-    <button onclick="showBounties('general')">General Bounties</button>
-    <button onclick="showBounties('custom')">Custom Bounties</button>
+    <button onclick="showBounties('general')">
+        General Bounties
+    </button>
+
+    <button onclick="showBounties('custom')">
+        Custom Bounties
+    </button>
+</div>
+
+<div id="set-description" class="set-description">
+    Loading...
 </div>
 
 <div id="gallery" class="gallery"></div>
@@ -113,6 +139,10 @@ const generalBounties = [
     },
     {
         title: "Ethan",
+        image: "Bounties/General/Ethan.png"
+    },
+    {
+        title: "Ollie"
         image: "Bounties/General/Ollie.png"
     }
 ];
@@ -125,15 +155,21 @@ const customBounties = [
     {
         title: "Piotr",
         image: "Bounties/Custom/Piotr.png"
+    },
+    {
+        title: "Angus"
+        image: "Bounties/Custom/Angus.png"
     }
 ];
 
 // ==========================
-// LOAD SET DESCRIPTION
+// LOAD DESCRIPTION
 // ==========================
 
 async function loadDescription(type) {
-    const descBox = document.getElementById("set-description");
+
+    const descBox =
+        document.getElementById("set-description");
 
     const filePath =
         type === "general"
@@ -141,12 +177,27 @@ async function loadDescription(type) {
             : "Bounties/Custom/desc.md";
 
     try {
-        const res = await fetch(filePath);
-        const text = await res.text();
-        descBox.textContent = text;
-    } catch (err) {
-        descBox.textContent = "";
-        console.warn("Description failed to load:", err);
+
+        const response = await fetch(filePath);
+
+        if (!response.ok) {
+            throw new Error(
+                `Could not load ${filePath}`
+            );
+        }
+
+        const markdown =
+            await response.text();
+
+        descBox.innerHTML =
+            marked.parse(markdown);
+
+    } catch (error) {
+
+        console.error(error);
+
+        descBox.innerHTML =
+            "<p>No description available.</p>";
     }
 }
 
@@ -156,27 +207,30 @@ async function loadDescription(type) {
 
 function showBounties(type) {
 
-    const gallery = document.getElementById("gallery");
+    const gallery =
+        document.getElementById("gallery");
 
     const bountyList =
         type === "general"
             ? generalBounties
             : customBounties;
 
-    // load description for selected set
     loadDescription(type);
 
-    // render cards
-    gallery.innerHTML = bountyList.map(bounty => `
-        <div class="bounty-card">
-            <img src="${bounty.image}" alt="${bounty.title}">
-            <div class="bounty-title">${bounty.title}</div>
-        </div>
-    `).join("");
+    gallery.innerHTML =
+        bountyList.map(bounty => `
+            <div class="bounty-card">
+                <img src="${bounty.image}"
+                     alt="${bounty.title}">
+                <div class="bounty-title">
+                    ${bounty.title}
+                </div>
+            </div>
+        `).join("");
 }
 
 // ==========================
-// DEFAULT VIEW
+// DEFAULT PAGE
 // ==========================
 
 showBounties("general");
@@ -185,3 +239,4 @@ showBounties("general");
 
 </body>
 </html>
+```
