@@ -124,15 +124,45 @@ const customBounties = [
     }
 ];
 
+// ==========================
+// LOAD SET DESCRIPTION
+// ==========================
+
+async function loadDescription(type) {
+    const descBox = document.getElementById("set-description");
+
+    const filePath =
+        type === "general"
+            ? "Bounties/General/desc.md"
+            : "Bounties/Custom/desc.md";
+
+    try {
+        const res = await fetch(filePath);
+        const text = await res.text();
+        descBox.textContent = text;
+    } catch (err) {
+        descBox.textContent = "";
+        console.warn("Description failed to load:", err);
+    }
+}
+
+// ==========================
+// SHOW BOUNTIES
+// ==========================
+
 function showBounties(type) {
 
     const gallery = document.getElementById("gallery");
 
     const bountyList =
         type === "general"
-        ? generalBounties
-        : customBounties;
+            ? generalBounties
+            : customBounties;
 
+    // load description for selected set
+    loadDescription(type);
+
+    // render cards
     gallery.innerHTML = bountyList.map(bounty => `
         <div class="bounty-card">
             <img src="${bounty.image}" alt="${bounty.title}">
@@ -141,7 +171,10 @@ function showBounties(type) {
     `).join("");
 }
 
-// Show General by default
+// ==========================
+// DEFAULT VIEW
+// ==========================
+
 showBounties("general");
 
 </script>
