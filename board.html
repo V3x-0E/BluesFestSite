@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bounty Board</title>
-
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
 <style>
 * {
     box-sizing: border-box;
@@ -21,6 +22,16 @@ header {
     text-align: center;
     padding: 30px 20px;
     border-bottom: 1px solid #333;
+}
+
+.set-description {
+    max-width: 1100px;
+    margin: 0 auto 25px auto;
+    padding: 20px;
+    background: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 12px;
+    line-height: 1.6;
 }
 
 .logo {
@@ -104,6 +115,8 @@ button:hover {
     <button onclick="showBounties('general')">General Bounties</button>
     <button onclick="showBounties('custom')">Custom Bounties</button>
 </div>
+<div id="set-description" class="set-description"></div>
+
 
 <div id="gallery" class="gallery"></div>
 
@@ -151,6 +164,38 @@ const customBounties = [
     }
 ];
 
+async function loadDescription(type) {
+
+    const descBox =
+        document.getElementById("set-description");
+
+    const filePath =
+        type === "general"
+            ? "Bounties/General/desc.md"
+            : "Bounties/Custom/desc.md";
+
+    try {
+
+        const response = await fetch(filePath);
+
+        if (!response.ok) {
+            throw new Error("Description file not found");
+        }
+
+        const markdown = await response.text();
+
+        descBox.innerHTML =
+            marked.parse(markdown);
+
+    } catch (error) {
+
+        console.error(error);
+
+        descBox.innerHTML =
+            "<p>No description available.</p>";
+    }
+}
+    
 function showBounties(type) {
 
     const gallery = document.getElementById("gallery");
