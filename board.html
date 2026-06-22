@@ -204,7 +204,9 @@ function showBounties(type) {
         type === "general"
         ? generalBounties
         : customBounties;
-
+    
+    loadDescription(type);
+    
     gallery.innerHTML = bountyList.map(bounty => `
         <div class="bounty-card">
             <img src="${bounty.image}" alt="${bounty.title}">
