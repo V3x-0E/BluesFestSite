@@ -4,6 +4,6 @@ In the case of the Piotr bounty it is highlighted on the poster as it is limited
 
 In the case of the remaining custom bounties here are restrictions: 
 
-Angus: A or Straight D only (Poles playing LSM count) Must be verbal enough for someone to confirm. Also counts on a soft call 
+Angus: A or Straight D only (Poles playing LSM count) Must be verbal enough for someone to confirm. Also counts on a soft call i.e. Loose ball push
 
-Ben: Mid or D pole only 
+Oly: GK or SSDM (Bonus points if you are an O middie stuck on offense)
